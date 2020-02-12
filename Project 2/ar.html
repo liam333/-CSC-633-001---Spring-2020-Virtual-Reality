@@ -4,7 +4,7 @@
 <script src="js/aframe.min.js"></script>
 <script src="js/aframe-ar.js"></script>
 <body style="margin: 0px; overflow: hidden;">
-  
+
 <!-- set detectionMode and matrixCodeType to enable barcode marker detection and custom pattern files -->
 
 <a-scene embedded vr-mode-ui="enabled: false;" arjs="debugUIEnabled: false;">
@@ -14,15 +14,21 @@
 		<img id="earth-flat" src="images/earth-flat.jpg" />
 		<img id="earth-sphere" src="images/earth-sphere.jpg" />
 	</a-assets>
-    
+
     <a-marker type="pattern" url="data/kanji.patt">
-        <a-box position="0 0.5 0" 
+        <a-box position="0 0.5 0"
                material="src:#grid; color: red; transparent: true; opacity: 0.50;">
         </a-box>
     </a-marker>
-    
+
+        <a-marker type="pattern" url="data/hiro.patt">
+        <a-box position="0 0.5 0"
+               material="src:#grid; color: blue; transparent: true; opacity: 0.50;">
+        </a-box>
+    </a-marker>
+
     <a-entity camera></a-entity>
-    
+
 </a-scene>
 </body>
 </html>
