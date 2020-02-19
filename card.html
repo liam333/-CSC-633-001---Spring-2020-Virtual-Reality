@@ -8,37 +8,45 @@
 
 <script src="https://aframe.io/releases/0.7.0/aframe.min.js"></script>
 <script src="https://jeromeetienne.github.io/AR.js/aframe/build/aframe-ar.js"></script>
+
 </head>
 
 <body>
 
     <a-scene embedded arjs>
     <a-marker type="pattern" url="data/diamond.patt">
-        <a-entity scale=".04 .04 .04">
+        <a-entity scale=".02 .02 .02">
             <a-entity gltf-model="models/ring.glb" >
-            <a-animation attribute="rotation" to ="90 360 0" dur="9000" repeat="indefinite" easing="linear"></a-animation>
             </a-entity>
         </a-entity>
     </a-marker>
 
     <a-marker type="pattern" url="data/star.patt">
-        <a-entity scale=".04 .04 .04">
+        <a-entity scale=".02 .02 .02">
             <a-entity gltf-model="models/star.glb" >
-            <a-animation attribute="rotation" to ="90 360 0" dur="9000" repeat="indefinite" easing="linear"></a-animation>
             </a-entity>
         </a-entity>
     </a-marker>
 
     <a-marker type="pattern" url="data/heart.patt">
-        <a-entity scale=".04 .04 .04">
+        <a-entity scale=".02 .02 .02">
             <a-entity gltf-model="models/wuv.glb" >
-            <a-animation attribute="rotation" to ="90 360 0" dur="9000" repeat="indefinite" easing="linear"></a-animation>
+            <a-animation attribute="rotation" to ="90 0 10" dur="9000" repeat="indefinite" easing="linear"></a-animation>
             </a-entity>
         </a-entity>
     </a-marker>
 
+    <a-marker type="pattern" url="data/music.patt">
+        <a-entity scale="0.02 0.02 0.02">
+            <a-entity gltf-model="models/music.glb" >
+            </a-entity>
+        </a-entity>
+    </a-marker>
+
+
     <a-entity camera></a-entity>
 
 </a-scene>
+
 </body>
 </html>
