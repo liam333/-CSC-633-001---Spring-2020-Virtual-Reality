@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Kumar Ahir - VR designer</title>
+    <meta name="description" content="Kumar Ahir - VR designer">
+    <script src="https://aframe.io/releases/0.8.0/aframe.min.js"></script>
+    <script src="https://unpkg.com/aframe-look-at-component@0.5.1/dist/aframe-look-at-component.min.js"></script>
+    <script src="https://cdn.rawgit.com/zcanter/aframe-gradient-sky/master/dist/gradientsky.min.js"></script>
+    <script src="https://unpkg.com/aframe-animation-component@^4.1.2/dist/aframe-animation-component.min.js"></script>
+    <script src="https://unpkg.com/aframe-event-set-component@^4.0.0/dist/aframe-event-set-component.min.js"></script>
+    <script src="https://unpkg.com/@tlaukkan/aframe-three-color-gradient-shader@0.0.1/index.js"></script>
+    <script>
+      //{name:"grad3",type:"gradient",topColor:"10 255 100",bottomColor:"123 20 18",middleColor}
+      var gradientData=[{name:"grad1",type:"gradient",topColor:"#C6FFDD",bottomColor:"#f7797d",middleColor:"#FBD786"},
+                        {name:"grad2",type:"gradient",topColor:"#f953c6",bottomColor:"#b91d73",middleColor:"#f953c6"},
+                       {name:"grad3",type:"gradient",topColor:"#FFFDE4",bottomColor:"#005AA7",middleColor:"#005AA7"},
+                       {name:"grad4",type:"gradient",topColor:"#fdbb2d",bottomColor:"#1a2a6c",middleColor:"#b21f1f"},
+                       {name:"img 1",type:"image",src:"src5"},
+                       {name:"img 2",type:"image",src:"src6"},
+                        {name:"Dawn",type:"gradient",topColor:"#F3904F",middleColor:"#F3904F",bottomColor:"#3B4371"}];
+
+      // Component to change to a sequential color on click.
+      AFRAME.registerComponent('select-gradient', {
+        init: function () {
+          var lastcol={topColor:'#ffffff',middleColor:'#ffffff',bottomColor:'#ffffff'};
+          this.el.addEventListener('click', function (evt) {
+            var grad=this.getAttribute("id");
+            console.log(grad);
+            var gradcol={};
+
+            for(var i=0;i<gradientData.length;i++)
+            {
+              if(gradientData[i].name==grad)
+              {
+                if(gradientData[i].type=="gradient")
+                {
+                  gradcol={"topColor":gradientData[i].topColor,"bottomColor":gradientData[i].bottomColor,"middleColor":gradientData[i].middleColor};
+
+                  console.log(grad,gradcol.topColor);
+                }
+                else if(gradientData[i].type=="image")
+                {
+                  gradcol={"src":gradientData[i].src};
+                  console.log(grad,gradcol.src);
+                }
+                break;
+              }
+            }
+
+
+            var sk=document.getElementById("skyid");
+
+            if(gradcol.src!=undefined)
+            {
+
+              sk.setAttribute('material',{src:"#"+gradcol.src,shader:"flat"});
+            }
+
+            if(gradcol.topColor!=undefined)
+            {
+              sk.setAttribute("material",{shader:"threeColorGradientShader",topColor:lastcol.topColor,bottomColor:lastcol.bottomColor,middleColor:lastcol.middleColor});
+              sk.setAttribute("animation__top",{property:'material.topColor',to:gradcol.topColor,startEvents:'startSkyAnim'});
+              sk.setAttribute("animation__middle",{property:'material.middleColor',to:gradcol.middleColor,startEvents:'startSkyAnim'});
+              sk.setAttribute("animation__bottom",{property:'material.bottomColor',to:gradcol.bottomColor,startEvents:'startSkyAnim'});
+              sk.emit("startSkyAnim");
+              lastcol={topColor:gradcol.topColor,middleColor:gradcol.middleColor,bottomColor:gradcol.bottomColor};
+            }
+
+
+          });
+          this.el.addEventListener('mouseenter', function (evt) {
+            var cur=document.getElementById("cursor-visual");
+            console.log("Mouse enter");
+            cur.emit("startFuse");
+
+          });
+          this.el.addEventListener('mouseleave', function (evt) {
+            var cur=document.getElementById("cursor-visual");
+            console.log("Mouse leave");
+            cur.emit("stopFuse");
+          });
+
+        }
+      });
+
+      AFRAME.registerComponent('gradient-platform', {
+        init: function () {
+          for(var i=0;i<gradientData.length;i++)
+          {
+            if(gradientData[i].type=="gradient")
+            {
+              var mel = document.createElement('a-entity');
+              mel.setAttribute("id",gradientData[i].name);
+              mel.setAttribute("position",{x:-0.6+0.2*i,y:0.05,z:-0.2});
+              mel.setAttribute("rotation",{x:-90,y:0,z:0});
+              mel.setAttribute("select-gradient",'');
+
+              var col=document.createElement('a-entity');
+              col.setAttribute("geometry",{primitive:"circle",radius:0.05});
+              col.setAttribute("material",{shader:"flat",color:gradientData[i].topColor});
+
+              var tex=document.createElement('a-text');
+              tex.setAttribute("value",gradientData[i].name);
+              tex.setAttribute("position",{x:0,y:-0.08,z:0.01});
+              tex.setAttribute("width",1);
+              tex.setAttribute("align","center");
+              tex.setAttribute("color","#0f0f0f");
+
+              mel.appendChild(col);
+              mel.appendChild(tex);
+
+              this.el.appendChild(mel);
+            }
+            else
+            {
+              var mel = document.createElement('a-entity');
+              mel.setAttribute("id",gradientData[i].name);
+              mel.setAttribute("position",{x:-0.6+0.2*i,y:0.05,z:-0.2});
+              mel.setAttribute("rotation",{x:-90,y:0,z:0});
+              mel.setAttribute("select-gradient",'');
+
+              var col=document.createElement('a-entity');
+              col.setAttribute("geometry",{primitive:"circle",radius:0.05});
+              col.setAttribute("material",{shader:"flat",color:"#ffffff"});
+
+              var tex=document.createElement('a-text');
+              tex.setAttribute("value",gradientData[i].name);
+              tex.setAttribute("position",{x:0,y:-0.08,z:0.01});
+              tex.setAttribute("width",1);
+              tex.setAttribute("align","center");
+              tex.setAttribute("color","#0f0f0f");
+
+              mel.appendChild(col);
+              mel.appendChild(tex);
+
+              this.el.appendChild(mel);
+            }
+          }
+        }
+      });
+    </script>
+  </head>
+  <body>
+    <a-scene>
+      <a-assets>
+        <img id="src5" src="https://cdn.glitch.com/19dba616-2c09-4b5d-9168-e9bb790b4853%2Fpoint1.jpg?1544706553755"/>
+        <img id="src6" src="https://cdn.glitch.com/19dba616-2c09-4b5d-9168-e9bb790b4853%2Fpoint2.jpg?1544706553926"/>
+      </a-assets>
+      <a-entity id="plat" gradient-platform position="0 1 -2" rotation="60 0 0" >
+        <a-entity geometry="primitive: box;height:0.09;width:1.5;depth:0.5"
+                  material="shader:flat;color:#f0f0f0" shadow></a-entity>
+        <a-entity geometry="primitive:box;height:0.05;width:1.8;depth:0.8"
+                  material="shader:flat;color:#c8c8c8"
+                  position="0 0 -0.04" shadow="receive:true">
+        </a-entity>
+      </a-entity>
+
+      <a-sky id="skyid" material="src:https://cdn.glitch.com/19dba616-2c09-4b5d-9168-e9bb790b4853%2Fpoint2.jpg?1544706553926"
+            animation__top="property:material.topColor;startEvents:startSkyAnim;autoplay:false;to:#ffffff"
+            animation__bottom="property:material.bottomColor;startEvents:startSkyAnim;autoplay:false;to:#ffffff"
+            animation__middle="property:material.middleColor;startEvents:startSkyAnim;autoplay:false;to:#ffffff">
+
+      </a-sky>
+
+      <a-entity id="cam" camera position="0 1.6 0" look-controls wasd-controls>
+        <a-entity id="cursor-visual" cursor="fuse:true;fuseTimeout:2000"
+                  material="shader:flat;color:#00ff00"
+                  position="0 0 -1"
+                  geometry="primitive: ring; radiusInner: 0.01; radiusOuter: 0.015;thetaLength:0"
+                  animation__start="property: geometry.thetaLength; dir: alternate; dur: 2000;
+                                easing: easeInSine; from:0;to: 360;startEvents:startFuse;pauseEvents:stopFuse;autoplay:false"
+
+                  event-set__stop="_event:stopFuse;geometry.thetaLength:0">
+          <a-entity geometry="primitive:ring;radiusOuter:0.015;radiusInner:0.01" material="shader:flat;color:#000000"></a-entity>
+          <!--animation__stop="property: geometry.thetaLength; dir: alternate; dur: 1000;
+                                easing: easeInSine; from:360;to: 0;startEvents:stopFuse;autoplay:false"-->
+        </a-entity>
+
+        <!--<a-entity id="curs" cursor color="#ff0000" position="0 0 -1" geometry="primitive: ring; radiusInner: 0.01; radiusOuter: 0.02;thetaLength:360"></a-entity>-->
+      </a-entity>
+    </a-scene>
+  </body>
+</html>
