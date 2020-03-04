@@ -1,150 +1,145 @@
 <!DOCTYPE html>
 <html>
+  <head>
+    <meta charset="utf-8">
+    <title>Gaze Example</title>
+    <meta name="description" content="Addler Pierre-Louis VR Dev">
+    <script src="https://aframe.io/releases/0.8.0/aframe.min.js"></script>
+    <script src="https://unpkg.com/aframe-look-at-component@0.5.1/dist/aframe-look-at-component.min.js"></script>
+    <script src="https://cdn.rawgit.com/zcanter/aframe-gradient-sky/master/dist/gradientsky.min.js"></script>
+    <script src="https://unpkg.com/aframe-animation-component@^4.1.2/dist/aframe-animation-component.min.js"></script>
+    <script src="https://unpkg.com/aframe-event-set-component@^4.0.0/dist/aframe-event-set-component.min.js"></script>
+    <script src="https://unpkg.com/@tlaukkan/aframe-three-color-gradient-shader@0.0.1/index.js"></script>
+    <script>
+      //{name:"grad3",type:"gradient",topColor:"10 255 100",bottomColor:"123 20 18",middleColor}
+      var gradientData=[{name:"img 1",type:"image",src:"src5"},
+                       {name:"img 2",type:"image",src:"src6"},
+                        {name:"img 3",type:"image",src:"src7"},
+                        {name:"img 4",type:"image",src:"src8"},
+                        {name:"img 5",type:"image",src:"src9"}];
 
-<head>
-    <title>CSC_633-Assignment 1</title>
-    <script src="js/aframe-master.min.js"></script>
-    <script src="js/aframe-animation-component.min.js"></script>
-    <script src="js/aframe-animation-timeline-component.min.js"></script>
-</head>
+      // Component to change to a sequential color on click.
+      AFRAME.registerComponent('select-image', {
+        init: function () {
+          var lastcol={topColor:'#ffffff',middleColor:'#ffffff',bottomColor:'#ffffff'};
+          this.el.addEventListener('click', function (evt) {
+            var grad=this.getAttribute("id");
+            console.log(grad);
+            var gradcol={};
 
-<body>
-
-<a-scene antialias="true">
-
-    <a-assets>
-        <img id="grass" src="images/grass.jpg" crossorigin="anonymous" />
-        <img id="sky" src="images/stars.jpg" crossorigin="anonymous" />
-        <img id="moon" src="images/moon.jpg" crossorigin="anonymous" />
-        <img id="ice" src="images/ice.jpg" crossorigin="anonymous" />
-        <a-asset-item id="dbs" src="models/dbs/scene.gltf"></a-asset-item>
-        <a-asset-item id="goku" src="models/goku/scene.gltf"></a-asset-item>
-        <a-asset-item id="shenron" src="models/shenron/scene.gltf"></a-asset-item>
-    </a-assets>
-
-    <a-sky
-        rotation = "0 0 0"
-        color = "#0000ff"
-        material = "src: #sky">
-        <a-animation
-                attribute= "material"
-                from="src: #sky"
-                to= "src: #ice"
-                dur= "2000"
-                direction= "alternate"
-                repeat= "1"
-                fill= "forwards"
-                begin="click">
-        </a-animation>
-    </a-sky>
-
-
-    <a-camera>
-        <a-cursor fuse="true" fuse-timeout="1000"></a-cursor>
-    </a-camera>
+            for(var i=0;i<gradientData.length;i++)
+            {
+              if(gradientData[i].name==grad)
+              {
+                if(gradientData[i].type=="image")
+                {
+                  gradcol={"src":gradientData[i].src};
+                  console.log(grad,gradcol.src);
+                }
+                break;
+              }
+            }
 
 
-    <a-plane
-        width="100" height="100"
-        position=" 0.00 0.00 0.00"
-        rotation="-90 0 0"
-        color="#FFFFFF"
-        material="src: #grass; repeat:100 100; transparent: true; opacity: 0.75"
-        shadow="cast: false; receive: true">
-    </a-plane>
+            var sk=document.getElementById("skyid");
 
-    <a-sphere
-        radius = "17"
-        position = "-65 150 -15"
-        color = "#FFFFFF"
-        material = "src: #moon;"
-        shadow = "cast: true; receive: true">
-        <a-animation
-                attribute= "color"
-                from="#FFFFFF"
-                to= "#FF0000"
-                dur= "2000"
-                direction= "alternate"
-                repeat= "1"
-                fill= "forwards"
-                begin="click">
-        </a-animation>
-    </a-sphere>
+            if(gradcol.src!=undefined)
+            {
 
-    <a-box
-        position = "2 2 2"
-        rotation = "0 45 0"
-        color = "#4CC3D9">
-        <a-animation
-                attribute= "rotation"
-                from="0 45 0"
-                to= "0 45 180"
-                dur= "3000"
-                direction= "alternate"
-                repeat= "1"
-                fill= "forwards"
-                begin="click">
-        </a-animation>
-        </a-box>
+              sk.setAttribute('material',{src:"#"+gradcol.src,shader:"flat"});
+            }
 
-    <a-torus
-        radius="0.5" radius-tubular="0.05"
-        position = "0 4 8"
-        rotation = "90 90 90"
-        color="#FFFF00"
-        material = "src: #grid; repeat: 16 8;"
-        shadow = "cast: true; receive: true">
-        <a-animation
-            attribute="material.color"
-            dur= "4000"
-            to="src: #ice"
-            from= "src: #grid"
-            fill= "forwards"
-            repeat="1"
-            direction="alternate"
-            begin= "click">
-        </a-animation>
-    </a-torus>
 
-    <a-entity
-        id='cabinet'
-        position = "0 0 8"
-        rotation = "0 40 0"
-        gltf-model="#goku"
-        scale="6 6 6"
-        color="#FFFFFF"
-        shadow="cast: true; receive: true;">
-        <a-animation
-                attribute= "position"
-                from="0 0 8"
-                to= "0 10 8"
-                dur= "3000"
-                direction= "alternate"
-                repeat= "1"
-                fill= "forwards"
-                begin="click">
-        </a-animation>
-    </a-entity>
+          });
+          this.el.addEventListener('mouseenter', function (evt) {
+            var cur=document.getElementById("cursor-visual");
+            console.log("Mouse enter");
+            cur.emit("startFuse");
 
-    <a-entity
-        id='cabinet'
-        position = "-.5 .5 -6"
-        rotation = "0 27 0"
-        gltf-model="#shenron"
-        scale="0.001 0.001 0.001"
-        color="#FFFFFF"
-        shadow="cast: true; receive: true;">
-        <a-animation
-            attribute="scale"
-            dur= "4000"
-            to=".1 .1 .1"
-            from= "0.001 0.001 0.001"
-            fill= "forwards"
-            direction="alternate"
-            begin= "click">
-        </a-animation>
-    </a-entity>
+          });
+          this.el.addEventListener('mouseleave', function (evt) {
+            var cur=document.getElementById("cursor-visual");
+            console.log("Mouse leave");
+            cur.emit("stopFuse");
+          });
 
-</a-scene>
-</body>
+        }
+      });
+
+      AFRAME.registerComponent('portal-locals', {
+        init: function () {
+          for(var i=0;i<gradientData.length;i++)
+          {
+            if(gradientData[i].type=="image")
+            {
+              var mel = document.createElement('a-entity');
+              mel.setAttribute("id",gradientData[i].name);
+              mel.setAttribute("position",{x:-0.6+0.2*i,y:0.05,z:-0.2});
+              mel.setAttribute("rotation",{x:-90,y:0,z:0});
+              mel.setAttribute("select-image",'');
+
+              var col=document.createElement('a-entity');
+              col.setAttribute("geometry",{primitive:"circle",radius:0.05});
+              col.setAttribute("material",{shader:"flat",color:"#ffffff"});
+
+              var tex=document.createElement('a-text');
+              tex.setAttribute("value",gradientData[i].name);
+              tex.setAttribute("position",{x:0,y:-0.08,z:0.01});
+              tex.setAttribute("width",1);
+              tex.setAttribute("align","center");
+              tex.setAttribute("color","#0f0f0f");
+
+              mel.appendChild(col);
+              mel.appendChild(tex);
+
+              this.el.appendChild(mel);
+            }
+          }
+        }
+      });
+    </script>
+  </head>
+  <body>
+    <a-scene>
+      <a-assets>
+        <img id="src5" src="https://cdn.glitch.com/19dba616-2c09-4b5d-9168-e9bb790b4853%2Fpoint1.jpg?1544706553755"/>
+        <img id="src6" src="https://cdn.glitch.com/19dba616-2c09-4b5d-9168-e9bb790b4853%2Fpoint2.jpg?1544706553926"/>
+        <img id="src7" src="images/stars.jpg" crossorigin="anonymous"/>
+        <img id="src8" src="images/ice.jpg" crossorigin="anonymous"/>
+        <img id="src9" src="images/earth-sphere.jpg" crossorigin="anonymous"/>
+      </a-assets>
+      <a-entity id="plat" portal-locals position="0 1 -2" rotation="60 0 0" >
+        <a-entity geometry="primitive: box;height:0.09;width:1.5;depth:0.5"
+                  material="shader:flat;color:#f0f0f0" shadow></a-entity>
+        <a-entity geometry="primitive:box;height:0.05;width:1.8;depth:0.8"
+                  material="shader:flat;color:#c8c8c8"
+                  position="0 0 -0.04" shadow="receive:true">
+        </a-entity>
+      </a-entity>
+
+      <a-sky id="skyid" material="src:https://cdn.glitch.com/19dba616-2c09-4b5d-9168-e9bb790b4853%2Fpoint2.jpg?1544706553926"
+            animation__top="property:material.topColor;startEvents:startSkyAnim;autoplay:false;to:#ffffff"
+            animation__bottom="property:material.bottomColor;startEvents:startSkyAnim;autoplay:false;to:#ffffff"
+            animation__middle="property:material.middleColor;startEvents:startSkyAnim;autoplay:false;to:#ffffff">
+
+      </a-sky>
+
+      <a-entity id="cam" camera position="0 1.6 0" look-controls wasd-controls>
+        <a-entity id="cursor-visual" cursor="fuse:true;fuseTimeout:2000"
+                  material="shader:flat;color:#00ff00"
+                  position="0 0 -1"
+                  geometry="primitive: ring; radiusInner: 0.01; radiusOuter: 0.015;thetaLength:0"
+                  animation__start="property: geometry.thetaLength; dir: alternate; dur: 2000;
+                                easing: easeInSine; from:0;to: 360;startEvents:startFuse;pauseEvents:stopFuse;autoplay:false"
+
+                  event-set__stop="_event:stopFuse;geometry.thetaLength:0">
+          <a-entity geometry="primitive:ring;radiusOuter:0.015;radiusInner:0.01" material="shader:flat;color:#000000"></a-entity>
+          <!--animation__stop="property: geometry.thetaLength; dir: alternate; dur: 1000;
+                                easing: easeInSine; from:360;to: 0;startEvents:stopFuse;autoplay:false"-->
+        </a-entity>
+
+        <!--<a-entity id="curs" cursor color="#ff0000" position="0 0 -1" geometry="primitive: ring; radiusInner: 0.01; radiusOuter: 0.02;thetaLength:360"></a-entity>-->
+      </a-entity>
+    </a-scene>
+  </body>
 </html>
