@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>CSC_633-Assignment 1</title>
+    <script src="js/aframe-master.min.js"></script>
+    <script src="js/aframe-animation-component.min.js"></script>
+    <script src="js/aframe-animation-timeline-component.min.js"></script>
+</head>
+
+<body>
+
+<a-scene antialias="true">
+
+    <a-assets>
+        <img id="grass" src="images/grass.jpg" crossorigin="anonymous" />
+        <img id="sky" src="images/stars.jpg" crossorigin="anonymous" />
+        <img id="moon" src="images/moon.jpg" crossorigin="anonymous" />
+        <img id="ice" src="images/ice.jpg" crossorigin="anonymous" />
+        <a-asset-item id="dbs" src="models/dbs/scene.gltf"></a-asset-item>
+        <a-asset-item id="goku" src="models/goku/scene.gltf"></a-asset-item>
+        <a-asset-item id="shenron" src="models/shenron/scene.gltf"></a-asset-item>
+    </a-assets>
+
+    <a-sky
+        rotation = "0 0 0"
+        color = "#0000ff"
+        material = "src: #sky">
+        <a-animation
+                attribute= "material"
+                from="src: #sky"
+                to= "src: #ice"
+                dur= "2000"
+                direction= "alternate"
+                repeat= "1"
+                fill= "forwards"
+                begin="click">
+        </a-animation>
+    </a-sky>
+
+
+    <a-camera>
+        <a-cursor fuse="true" fuse-timeout="1000"></a-cursor>
+    </a-camera>
+
+
+    <a-plane
+        width="100" height="100"
+        position=" 0.00 0.00 0.00"
+        rotation="-90 0 0"
+        color="#FFFFFF"
+        material="src: #grass; repeat:100 100; transparent: true; opacity: 0.75"
+        shadow="cast: false; receive: true">
+    </a-plane>
+
+    <a-sphere
+        radius = "17"
+        position = "-65 150 -15"
+        color = "#FFFFFF"
+        material = "src: #moon;"
+        shadow = "cast: true; receive: true">
+        <a-animation
+                attribute= "color"
+                from="#FFFFFF"
+                to= "#FF0000"
+                dur= "2000"
+                direction= "alternate"
+                repeat= "1"
+                fill= "forwards"
+                begin="click">
+        </a-animation>
+    </a-sphere>
+
+    <a-box
+        position = "2 2 2"
+        rotation = "0 45 0"
+        color = "#4CC3D9">
+        <a-animation
+                attribute= "rotation"
+                from="0 45 0"
+                to= "0 45 180"
+                dur= "3000"
+                direction= "alternate"
+                repeat= "1"
+                fill= "forwards"
+                begin="click">
+        </a-animation>
+        </a-box>
+
+    <a-torus
+        radius="0.5" radius-tubular="0.05"
+        position = "0 4 8"
+        rotation = "90 90 90"
+        color="#FFFF00"
+        material = "src: #grid; repeat: 16 8;"
+        shadow = "cast: true; receive: true">
+        <a-animation
+            attribute="material.color"
+            dur= "4000"
+            to="src: #ice"
+            from= "src: #grid"
+            fill= "forwards"
+            repeat="1"
+            direction="alternate"
+            begin= "click">
+        </a-animation>
+    </a-torus>
+
+    <a-entity
+        id='cabinet'
+        position = "0 0 8"
+        rotation = "0 40 0"
+        gltf-model="#goku"
+        scale="6 6 6"
+        color="#FFFFFF"
+        shadow="cast: true; receive: true;">
+        <a-animation
+                attribute= "position"
+                from="0 0 8"
+                to= "0 10 8"
+                dur= "3000"
+                direction= "alternate"
+                repeat= "1"
+                fill= "forwards"
+                begin="click">
+        </a-animation>
+    </a-entity>
+
+    <a-entity
+        id='cabinet'
+        position = "-.5 .5 -6"
+        rotation = "0 27 0"
+        gltf-model="#shenron"
+        scale="0.001 0.001 0.001"
+        color="#FFFFFF"
+        shadow="cast: true; receive: true;">
+        <a-animation
+            attribute="scale"
+            dur= "4000"
+            to=".1 .1 .1"
+            from= "0.001 0.001 0.001"
+            fill= "forwards"
+            direction="alternate"
+            begin= "click">
+        </a-animation>
+    </a-entity>
+
+</a-scene>
+</body>
+</html>
